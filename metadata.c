@@ -1979,6 +1979,233 @@ GetHEICImageMetadata(const char *path, char *name)
         return ret;
 }
 
+static int64_t
+GetCrwImageMetadata(const char *path, char *name)
+{
+	FILE *file;
+	// uint32_t width=0, height=0;
+	// int thumb=0;
+	struct stat statbuf;
+	int64_t ret;
+	metadata_t m;
+	memset(&m, '\0', sizeof(metadata_t));
+	// uint8_t tagbuf[12];
+	uint32_t free_flags = 0xFFFFFFFF;
+	// int is_little_endian;
+	// uint32_t ifd_offset;
+	// uint32_t date_offset = 0;
+	// uint16_t nb_entries;
+	// uint16_t entry_index;
+	// uint16_t entry_tag;
+	// uint16_t entry_type;
+	// uint32_t entry_count;
+	// uint32_t entry_value;
+	// char b[1024];
+	char file_name[MAXPATHLEN];	
+			
+	//DPRINTF (E_WARN, L_METADATA, "-- %s\n", path);
+			
+	strcpy(file_name, name);
+
+	if ( stat(path, &statbuf) != 0 )
+		return 0;
+	strip_ext(name);
+
+	// if ((file = fopen (path, "rb")) == (FILE *)NULL)
+	// {
+	// 	DPRINTF (E_ERROR, L_METADATA, "Error opening \"%s\": %s\n",
+	// 			path, strerror (errno));
+	// 	return 0;
+	// }
+
+	// if (fread (tagbuf, 1, 8, file) != 8)
+	// {
+	// 	fclose (file);
+	// 	return 0;
+	// }
+
+	// // Motorola, i.e. big endian
+	// if (!memcmp (tagbuf, "MM\x00\x2a", 4))
+	// 	is_little_endian = 0;
+	// // Intel, i.e. little endian
+	// else if (!memcmp (tagbuf, "II\x2a\x00", 4))
+	// 	is_little_endian = 1;
+	// else
+	// {
+	// 	DPRINTF (E_WARN, L_METADATA,
+	// 			"\"%s\" not a TIFF file.\n", path);
+	// 	fclose (file);
+	// 	return 0;
+	// }
+
+	//DPRINTF (E_WARN, L_METADATA, "%s endian\n", is_little_endian ? "little" : "big");
+
+	// ifd_offset =
+	// 	is_little_endian
+	// 	? tagbuf[4] | tagbuf[5]<<8 | tagbuf[6]<<16 | tagbuf[7]<<24
+	// 	: tagbuf[7] | tagbuf[6]<<8 | tagbuf[5]<<16 | tagbuf[4]<<24;
+
+	//DPRINTF (E_WARN, L_METADATA, "IFD offset: %d\n", ifd_offset);
+
+	// if (fseek (file, ifd_offset, SEEK_SET))
+	// {
+	// 	DPRINTF (E_WARN, L_METADATA,
+	// 			"%s: Seek error.\n", path);
+	// 	fclose (file);
+	// 	return 0;
+	// }
+
+	// if (fread (tagbuf, 1, 2, file) != 2)
+	// {
+	// 	fclose (file);
+	// 	return 0;
+	// }
+
+	// nb_entries =
+	// 	is_little_endian
+	// 	? tagbuf[0] | tagbuf[1]<<8
+	// 	: tagbuf[1] | tagbuf[0]<<8;
+
+	//DPRINTF (E_WARN, L_METADATA, "nb entries: %d\n", nb_entries);
+
+	// entry_index = 0;
+	// while (entry_index < nb_entries)
+	// {
+	// 	if (fread (tagbuf, 1, 12, file) != 12)
+	// 	{
+	// 		fclose (file);
+	// 		return 0;
+	// 	}
+
+	// 	// 0x100 is width, 0x101 is height and 0x132 is date created
+	// 	entry_tag =
+	// 		is_little_endian
+	// 		? tagbuf[0] | tagbuf[1]<<8
+	// 		: tagbuf[1] | tagbuf[0]<<8;
+
+	// 	//DPRINTF (E_WARN, L_METADATA, "entry tag: %.4x\n", entry_tag);
+
+	// 	// 3 is short, 4 is long
+	// 	entry_type =
+	// 		is_little_endian
+	// 		? tagbuf[2] | tagbuf[3]<<8
+	// 		: tagbuf[3] | tagbuf[2]<<8;
+
+	// 	//DPRINTF (E_WARN, L_METADATA, "entry type: %.4x\n", entry_type);
+
+	// 	// count
+	// 	entry_count =
+	// 		is_little_endian
+	// 		? tagbuf[4] | tagbuf[5]<<8 | tagbuf[6]<<16 | tagbuf[7]<<24
+	// 		: tagbuf[7] | tagbuf[6]<<8 | tagbuf[5]<<16 | tagbuf[4]<<24;
+
+	// 	//DPRINTF (E_WARN, L_METADATA, "entry count: %d\n", entry_count);
+		
+	// 	if(entry_type == 3) // short
+	// 	{
+	// 		entry_value = is_little_endian
+	// 						? tagbuf[8] | tagbuf[9]<<8
+	// 						: tagbuf[9] | tagbuf[8]<<8;
+	// 	}
+	// 	else
+	// 	{
+	// 		entry_value = is_little_endian
+	// 						? tagbuf[ 8] | tagbuf[ 9]<<8 | tagbuf[10]<<16 | tagbuf[11]<<24
+	// 						: tagbuf[11] | tagbuf[10]<<8 | tagbuf[ 9]<<16 | tagbuf[ 8]<<24;
+	// 	}
+
+	// 	//DPRINTF (E_WARN, L_METADATA, "entry value: %d\n", entry_value);
+
+	// 	if (entry_tag == 0x100)
+	// 	{
+	// 		width = entry_value;
+	// 	}
+	// 	else if (entry_tag == 0x101)
+	// 	{
+	// 		height = entry_value;
+	// 	}
+	// 	else if(entry_tag == 0x132)   
+	// 	{
+	// 		date_offset = entry_value;
+	// 	}
+		
+	// 	entry_index++;
+	// }
+	
+	// if (date_offset != 0)
+	// {
+	// 	char date[20];
+	// 	fseek(file, date_offset, SEEK_SET);
+	// 	fgets(date, 20, file);
+	// 	m.date = strdup(date);
+	// 	m.date[4] = '-';
+	// 	m.date[7] = '-';
+	// 	m.date[10] = 'T';				
+	// }
+
+	// fclose (file);
+
+	// // TODO: parse Exif too, for date, location
+
+	// if (width == 0 || height == 0)
+	// {
+	// 	DPRINTF (E_WARN, L_METADATA, "%s: could not find width and height in TIFF header.\n", path);
+	// 	free_metadata (&m, free_flags);
+	// 	return 0;
+		
+	// }
+
+	// xasprintf(&m.resolution, "%dx%d", (int)width, (int)height);
+	// m.rotation = 0;
+	// thumb = 0;
+	m.dlna_pn = NULL;
+	m.mime = strdup("image/x-canon-crw");
+
+	if (!m.title)
+		m.title = strdup (name);
+		
+	// if(m.date == NULL)
+	// {
+	// 	char date[20];
+	// 	getDateFromNFO(path, file_name, date);
+	// 	if(date[0] == '\0')
+	// 	{
+	// 		free(m.date);
+	// 		m.date = NULL;		
+	// 	}
+	// 	else
+	// 	{
+	// 		m.date = strdup(date);
+	// 		m.date[10] = 'T';
+	// 	}
+	// }
+	
+	//DEBUG DPRINTF(E_DEBUG, L_METADATA, " * date: %s\n", m.date);	
+
+	// DPRINTF (E_MAXDEBUG, L_METADATA,
+	// 		"Processed \"%s\":\n  Name: %s\n  Resolution: %s\n",
+	// 		path, name, m.resolution);
+
+	ret = sql_exec(db, "INSERT into DETAILS"
+	                   " (PATH, TITLE, SIZE, TIMESTAMP, CREATOR, DLNA_PN, MIME) "
+	                   "VALUES"
+	                   " (%Q, '%q', %lld, %lld, %Q, %Q, %Q);",
+	                   path, m.title, (long long)statbuf.st_size,
+					   (long long)statbuf.st_mtime, m.creator, m.dlna_pn, m.mime);
+	if( ret != SQLITE_OK )
+	{
+		DPRINTF(E_ERROR, L_METADATA, "Error inserting details for '%s'!\n", path);
+		ret = 0;
+	}
+	else
+	{
+		ret = sqlite3_last_insert_rowid(db);
+	}
+	free_metadata(&m, free_flags);
+
+	return ret;
+}
+
 int64_t
 GetImageMetadata(const char *path, char *name)
 {
@@ -2005,6 +2232,10 @@ GetImageMetadata(const char *path, char *name)
 	else if (ends_with (path, ".heic") || ends_with (path, ".heif"))
 	{
 		return GetHEICImageMetadata (path, name);
+	}
+	else if (ends_with (path, ".crw") || ends_with (path, ".CRW"))
+	{
+		return GetCrwImageMetadata (path, name);
 	}
 	else
 		return 0;

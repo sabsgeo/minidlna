@@ -411,7 +411,8 @@ is_image(const char * file)
 		ends_with(file, ".bmp") || ends_with(file, ".tif")  || 
 		ends_with(file, ".bmp") || ends_with(file, ".tif")  || 
 		ends_with(file, ".tiff") ||
-		ends_with(file, ".heic") || ends_with(file, ".heif")
+		ends_with(file, ".heic") || ends_with(file, ".heif") ||
+		ends_with(file, ".crw") || ends_with(file, ".CRW")
                 ); 
 }
 
